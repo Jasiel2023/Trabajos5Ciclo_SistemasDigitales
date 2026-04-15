@@ -1,120 +1,45 @@
-const int LED_PINS[]={2,3,4,5,6,7};
-const int BOTON_PIN= 8;
-int patronActual = 0;
-void setup()
-{
-  for(int i=0; i<= 5; i++){
-  	pinMode(LED_PINS[i], OUTPUT);
-  }
-  pinMode(BOTON_PIN, INPUT);
-}
 
-void loop()
-{
-  leerBoton();
-  switch (patronActual){
-    case 0:
-     patronSecuencia();
-     break;
-    case 1:
-     patronPersecucion();
-     break;
-     case 2:
-     patronParpadeo();
-     break;
-     case 3:
-     patronAleatorio();
-     break;
-     case 4:
-     patronOnda();
-     break;
-  } 
-}
+const int LED_PIN = 13;
+byte estadoLed = 0;
+int contador = 0;
+void setup() {
+  // put your setup code here, to run once:
+  pinMode(LED_PIN, OUTPUT);
 
-void leerBoton(){
-  if(digitalRead(BOTON_PIN) == HIGH){
-    patronActual++;
-    if(patronActual > 4){
-      patronActual = 0;
-    }
-    delay(300);
-  }else{
-    patronActual=0;
-    for(int i=0;i <= 5; i++){
-    digitalWrite(LED_PINS[i], LOW);
-  }
-  }
-}
-
-void patronSecuencia(){
-  for(int i=0;i <= 5; i++){
-    digitalWrite(LED_PINS[i], HIGH);
-    delay(150);
-  }
-
-  for(int i=0;i <= 5; i++){
-    digitalWrite(LED_PINS[i], LOW);
-    delay(150);
-  }
-
+  Serial.begin(9600);
   
+  byte a =  0b00000011;
+  byte b =  0b00000010;
+
+  Serial.println("---Resultados AND, OR, XOR, NOT,Shift");
+  Serial.print("AND(a&b):"); Serial.println(byte(a&b), BIN);
+  Serial.print("OR(a|b):"); Serial.println(byte(a|b), BIN);
+  Serial.print("XOR(a^b):"); Serial.println(byte(a ^ b), BIN);
+  Serial.print("NOT(~a):"); Serial.println(byte(~a), BIN);
+  Serial.print("Shift(1 << 2):"); Serial.println(byte(1 << 2), BIN);
+
+  estadoLed = estadoLed | (1<<0);
 }
 
-void patronPersecucion(){
-  for(int i=0;i <= 5; i++){
-    digitalWrite(LED_PINS[i], HIGH);
-    delay(150);
-    digitalWrite(LED_PINS[i], LOW);
+void loop() {
+  // put your main code here, to run repeatedly:
+  estadoLed = estadoLed ^ 0b00000001;
+
+  if((estadoLed & 1) == 1){
+    digitalWrite(LED_PIN, HIGH);
+
+  }else{
+    digitalWrite(LED_PIN, LOW);
   }
+
+  delay(500);
+
+  contador = (contador + 1) % 8;
+
+  Serial.print("Desplazamineto actual:");
+  Serial.println(1 << contador, BIN);
+
+  delay(500);
 }
-
-void patronParpadeo(){
-  int cont = 0;
-   while(cont < 4){
-       for(int i=0;i <= 5; i++){
-        digitalWrite(LED_PINS[i], HIGH);
-      }
-    delay(300);
-    for(int i=0;i <= 5; i++){
-        digitalWrite(LED_PINS[i], LOW);
-      }
-      delay(300);
-      cont++;
-   }
-}
-
-void patronAleatorio(){
-  for(int i=0;i <= 5; i++){
-    int aleatorio = random(0, 2);
-        if(aleatorio == 0){
-          digitalWrite(LED_PINS[i], LOW);
-        }else{
-          digitalWrite(LED_PINS[i], HIGH);
-        }
-        
-   }
-    delay(300);
-    for(int i=0;i <= 5; i++){
-        digitalWrite(LED_PINS[i], LOW);
-      }
-}
-
-void patronOnda(){
-   for(int i=0;i <= 5; i++){
-        digitalWrite(LED_PINS[i], HIGH);
-        delay(200);
-        digitalWrite(LED_PINS[i], LOW);
-      }
-    
-   for(int i=5;i >= 0; i--){
-        digitalWrite(LED_PINS[i], HIGH);
-        delay(200);
-        digitalWrite(LED_PINS[i], LOW);
-      }
-}
-
-
-
-
 
 
