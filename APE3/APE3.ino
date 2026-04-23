@@ -51,13 +51,13 @@ void loop() {
     Serial.print(canal2.dutyCycle);
     Serial.println(" %");
   }
-  int estado555 = digitalRead(pin555);
+  /*int estado555 = digitalRead(pin555);
   int estadoFF = digitalRead(pinFF);
 
   
   Serial.print(estado555);
   Serial.print(","); 
-  Serial.println(estadoFF + 2); 
+  Serial.println(estadoFF + 2); */
 }
 
 
