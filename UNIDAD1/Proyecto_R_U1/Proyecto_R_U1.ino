@@ -79,7 +79,7 @@ void mostrarLCD(int valor, int estadoActual) {
       lcd.print("ESPERANDO  ");
       break;
     case REGANDO:
-      lcd.print("ENCENDIDO  "); 
+      lcd.print("REGANDO"); 
       break;
     case PAUSA:
       lcd.print("PAUSA  ");
