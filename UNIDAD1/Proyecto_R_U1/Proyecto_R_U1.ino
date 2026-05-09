@@ -81,7 +81,7 @@ void mostrarLCD(int valor, int estadoActual) {
     case REGANDO:
       lcd.print("REGANDO"); 
       break;
-    case PAUSA:
+    case  PAUSA_ABSORCION:
       lcd.print("PAUSA  ");
       break;
   }
