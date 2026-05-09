@@ -29,12 +29,12 @@ void setup() {
 void loop() {
   //Mapeamos 
   int lecturaCruda = analogRead(A0);
-  int porcentaje = map(lecturaCruda, 890, 310, 0, 100);
+  int porcentaje = map(lecturaCruda, 766, 460, 0, 100);
   porcentaje = constrain(porcentaje, 0, 100); 
   
   unsigned long tiempoActual = millis();
 
-  mostrarLCD(porcentaje);
+  mostrarLCD(porcentaje, estadoActual);
 // Control de Estados
   switch (estadoActual) {
     
@@ -65,9 +65,24 @@ void loop() {
   }
 }
 
-void mostrarLCD(int valor) {
+void mostrarLCD(int valor, int estadoActual) {
   lcd.setCursor(0, 0);
   lcd.print("Humedad: ");
   lcd.print(valor);
   lcd.print("%   ");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Est: ");
+  
+  switch (estadoActual) {
+    case ESPERANDO:
+      lcd.print("ESPERANDO  ");
+      break;
+    case REGANDO:
+      lcd.print("ENCENDIDO  "); 
+      break;
+    case PAUSA:
+      lcd.print("PAUSA  ");
+      break;
+  }
 }
