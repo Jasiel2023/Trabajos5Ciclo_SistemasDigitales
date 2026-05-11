@@ -7,9 +7,9 @@ const int pin_rele = 8;
 
 
 // Definicion de  los estados 
-enum Estados { ESPERANDO, REGANDO, PAUSA_ABSORCION };
-Estados estadoActual = ESPERANDO;
-
+enum Estados { MONITOREANDO, REGANDO, PAUSA_ABSORCION };
+Estados estadoActual = MONITOREANDO;
+Estados estadoAnterior = MONITOREANDO;
 unsigned long cronometro = 0;
 const unsigned long TIEMPO_RIEGO = 3000;   
 const unsigned long TIEMPO_PAUSA = 5000;   
@@ -34,11 +34,11 @@ void loop() {
   
   unsigned long tiempoActual = millis();
 
-  mostrarLCD(porcentaje, estadoActual);
+  mostrarLCD(porcentaje);
 // Control de Estados
   switch (estadoActual) {
     
-    case ESPERANDO:
+    case MONITOREANDO:
       if (porcentaje < 30) {
         // Para ENCENDER la bomba
         digitalWrite(pin_rele, LOW);
@@ -59,13 +59,13 @@ void loop() {
     case PAUSA_ABSORCION:
       // Esperamos 5 segundos a que el agua filtre en la tierra
       if (tiempoActual - cronometro >= TIEMPO_PAUSA) {
-        estadoActual = ESPERANDO;
+        estadoActual = MONITOREANDO;
       }
       break;
   }
 }
 
-void mostrarLCD(int valor, int estadoActual) {
+void mostrarLCD(int valor) {
   lcd.setCursor(0, 0);
   lcd.print("Humedad: ");
   lcd.print(valor);
@@ -73,16 +73,42 @@ void mostrarLCD(int valor, int estadoActual) {
 
   lcd.setCursor(0, 1);
   lcd.print("Est: ");
-  
+}
+
+
+void mostrarEstado(int porcentaje) {
+
+  // Solo limpia cuando cambia de estado
+  if (estadoActual != estadoAnterior) {
+    lcd.clear();
+    estadoAnterior = estadoActual;
+  }
+
   switch (estadoActual) {
-    case ESPERANDO:
-      lcd.print("ESPERANDO  ");
+
+    case MONITOREANDO:
+
+      mostrarLCD(porcentaje);
+
+      lcd.setCursor(0, 1);
+      lcd.print("MONITOREANDO ");
       break;
+
     case REGANDO:
-      lcd.print("REGANDO"); 
+
+      lcd.setCursor(0, 0);
+      lcd.print("Sistema Activo");
+
+      lcd.setCursor(0, 1);
+      lcd.print("EN RIEGO      ");
       break;
-    case  PAUSA_ABSORCION:
-      lcd.print("PAUSA  ");
+
+    case PAUSA_ABSORCION:
+
+      mostrarLCD(porcentaje);
+
+      lcd.setCursor(0, 1);
+      lcd.print("PAUSA TEMP.   ");
       break;
   }
 }
