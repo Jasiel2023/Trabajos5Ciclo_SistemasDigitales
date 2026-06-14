@@ -69,14 +69,21 @@ void loop() {
 }
 
 
-float leerTemperatura() {
+/*float leerTemperatura() {
   int lectura = analogRead(pinSensor);
   
   float voltaje = lectura * (5.0 / 1024.0); 
   float temperaturaC = (voltaje - 0.5) * 100.0; 
   return temperaturaC;
-}
+}*/
+float leerTemperatura() {
+  int lectura = analogRead(pinSensor);
 
+  float voltaje = (lectura * 5.0) / 1024.0;
+  float temperaturaC = voltaje * 100.0; 
+
+  return temperaturaC;
+}
 // Tarea 1: Cambia el estado del LED verde
 void ejecutarHeartbeat(Tarea &t) {
   t.estado = !t.estado; // Toggle (Invertir estado)
